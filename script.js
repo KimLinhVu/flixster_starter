@@ -6,6 +6,7 @@ const load_more_button = document.getElementById('load-more-movies-btn')
 const search_input = document.getElementById('search-input')
 const exit_button = document.querySelector(".close")
 const back_top_button = document.getElementById('back-to-top-btn')
+const overlay = document.getElementById('overlay')
 
 var page_num = 1;
 var id = 0;
@@ -16,8 +17,8 @@ function addCardEventListener() {
     open.forEach(card => {
         card.addEventListener('click', () => {
             const modal = document.querySelector(card.dataset.modalTarget)
-            console.log("hello");
-            console.log(modal)
+            
+            overlay.classList.add('show')
             modal.classList.add('show')
         })
     })
@@ -47,7 +48,7 @@ function addMovies(movies){
     )
 }
 
-function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn, movie_grid){
+function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn, overlay, movieGrid, modalContainer){
     loadMoreButton.addEventListener('click', () => {
         page_num += 1
         fetchMovies(api_key, external_id)
@@ -56,7 +57,8 @@ function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn
     searchInput.addEventListener('keypress', (event) => {
         if (event.key === "Enter"){
             event.preventDefault();
-            movie_grid.innerHTML = ``;
+            movieGrid.innerHTML = ``;
+            modalContainer.innerHTML = ``;
             page_num = 1;
             id = 0;
             external_id = event.target.value;
@@ -65,7 +67,8 @@ function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn
     })
 
     exitButton.addEventListener('click', () => {
-        movie_grid.innerHTML = ``;
+        movieGrid.innerHTML = ``;
+        modalContainer.innerHTML = ``;
         external_id = null;
         page_num = 1;
         id = 0;
@@ -77,17 +80,20 @@ function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn
         document.documentElement.scrollTop = 0;
     })
 
-    document.querySelectorAll('.movie-card').forEach((e) => {
-        console.log(e);
+    overlay.addEventListener('click', () => {
+        const modals = document.querySelectorAll('.show')
+        modals.forEach(modal => {
+            modal.classList.remove('show')
+        })
     })
 
 }
 
-const fetchMovies = async (api_key, external_id) => {
+const fetchMovies = async (apiKey, external_id) => {
     
     if (external_id != null){
         try{
-            const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&language=en-US&query=${external_id}&page=${page_num}&include_adult=false`);
+            const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${external_id}&page=${page_num}&include_adult=false`);
             const data = await res.json();
             console.log(data.results)
             addMovies(data.results)
@@ -97,7 +103,7 @@ const fetchMovies = async (api_key, external_id) => {
     }
     else{
         try {
-            const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${api_key}&language=en-US&page=${page_num}`);
+            const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${page_num}`);
             const data = await res.json();
             addMovies(data.results)
         } catch (err){
@@ -110,6 +116,6 @@ const fetchMovies = async (api_key, external_id) => {
 
 window.onload = function () {
     fetchMovies(api_key, external_id);
-    addEventListeners(load_more_button, search_input, exit_button, back_top_button, movie_grid)
+    addEventListeners(load_more_button, search_input, exit_button, back_top_button, overlay, movie_grid, modal_container)
 }
  
