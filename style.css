@@ -4,11 +4,12 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
 }
 
 body {
-    background-color: aquamarine;
-    color: black;
+    background-color: black;
+    color: white;
 }
 
 h2 {
@@ -34,6 +35,10 @@ h3 {
 
 img {
     width: 80%;
+}
+
+input:focus {
+    outline: none;
 }
 
 @media screen and (max-width: 900px){

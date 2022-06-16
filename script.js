@@ -4,6 +4,7 @@ const api_key = "35f2fd51799bb7ebced7f207d3475953"
 const load_more_button = document.getElementById('load-more-movies-btn')
 const search_input = document.getElementById('search-input')
 const exit_button = document.querySelector(".close")
+const back_top_button = document.getElementById('back-to-top-btn')
 
 var page_num = 1;
 var external_id = null;
@@ -26,10 +27,13 @@ function addMovies(movies){
     )
 }
 
-function addEventListeners(loadMoreButton, searchInput, exitButton, movie_grid){
+function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn, movie_grid){
     loadMoreButton.addEventListener('click', () => {
         page_num += 1
         fetchMovies(api_key, external_id)
+        // let height = movie_grid.scrollHeight;
+        // console.log(height)
+        // document.documentElement.scrollTop = height + 2000;
     })
 
     searchInput.addEventListener('keypress', (event) => {
@@ -46,7 +50,12 @@ function addEventListeners(loadMoreButton, searchInput, exitButton, movie_grid){
         movie_grid.innerHTML = ``;
         external_id = null;
         page_num = 1;
+        searchInput.value = '';
         fetchMovies(api_key, external_id);
+    })
+
+    backToTopBtn.addEventListener('click', () => {
+        document.documentElement.scrollTop = 0;
     })
 
 }
@@ -76,6 +85,6 @@ const fetchMovies = async (api_key, external_id) => {
 
 window.onload = function () {
     fetchMovies(api_key, external_id);
-    addEventListeners(load_more_button, search_input, exit_button, movie_grid)
+    addEventListeners(load_more_button, search_input, exit_button, back_top_button, movie_grid)
 }
  
