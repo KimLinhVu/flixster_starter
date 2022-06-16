@@ -8,6 +8,7 @@ const exit_button = document.querySelector(".close")
 const back_top_button = document.getElementById('back-to-top-btn')
 const overlay = document.getElementById('overlay')
 const container = document.querySelector('.container')
+const form = document.querySelector
 
 var page_num = 1;
 var card_id = 0;
