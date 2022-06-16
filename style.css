@@ -35,6 +35,12 @@ h3 {
 
 img {
     width: 80%;
+    background-color: white;
+}
+
+img:hover {
+    opacity: .5;
+    cursor: pointer;
 }
 
 input:focus {
@@ -51,4 +57,28 @@ input:focus {
     .movies-grid {
         grid-template-columns: repeat(3, 1fr);
     }
+}
+
+/* Modal CSS */
+.modal-card {
+    opacity: 0;
+    pointer-events: none;
+    transition: 200ms ease-in-out;
+    position: fixed;
+    background-color: antiquewhite;
+    color: black;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 80%;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 0px rgba(108, 111, 121, 0.7);
+    z-index: 10;
+    justify-content: center;
+}
+
+.modal-card.show {
+    opacity: 1;
+    pointer-events: all;
 }

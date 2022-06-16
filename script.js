@@ -1,4 +1,5 @@
 const movie_grid = document.querySelector(".movies-grid")
+const modal_container = document.querySelector(".modal-container")
 const imageBaseUrl = 'https://image.tmdb.org/t/p'
 const api_key = "35f2fd51799bb7ebced7f207d3475953"
 const load_more_button = document.getElementById('load-more-movies-btn')
@@ -7,14 +8,33 @@ const exit_button = document.querySelector(".close")
 const back_top_button = document.getElementById('back-to-top-btn')
 
 var page_num = 1;
+var id = 0;
 var external_id = null;
 
-function addMovieHTML(movieGridElement, movie){
+function addCardEventListener() {
+    let open = document.querySelectorAll('[data-modal-target]')
+    open.forEach(card => {
+        card.addEventListener('click', () => {
+            const modal = document.querySelector(card.dataset.modalTarget)
+            console.log("hello");
+            console.log(modal)
+            modal.classList.add('show')
+        })
+    })
+}
+
+function addMovieHTML(movieGridElement, modalContainer, movie){
     movieGridElement.innerHTML += `
-    <div class="movie-card">
-        <h2 class="movie-title">${movie.original_title}</h2>
-        <img class="movie-poster" src="${imageBaseUrl}/w342${movie.poster_path}" alt="${movie.original_title}" title="${movie.original_title}"/>
+    <div class="movie-card" data-modal-target="#modal-card${id}">
+        <h2 class="movie-title">${movie.title}</h2>
+        <img class="movie-poster" src="${imageBaseUrl}/w342${movie.poster_path}" alt="${movie.original_title}" title="${movie.title}"/>
         <h3 class="movie-votes">Ratings: ${movie.vote_average}</h3>
+    </div>
+    `
+    modalContainer.innerHTML += `
+    <div class="modal-card" id="modal-card${id++}">
+        <h2>More About ${movie.original_title}</h2>
+        <p>${movie.overview}</p>
     </div>
     `
 }
@@ -22,7 +42,7 @@ function addMovieHTML(movieGridElement, movie){
 function addMovies(movies){
 
     movies.forEach(movie => {
-        addMovieHTML(movie_grid, movie)
+        addMovieHTML(movie_grid, modal_container, movie)
     }
     )
 }
@@ -31,9 +51,6 @@ function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn
     loadMoreButton.addEventListener('click', () => {
         page_num += 1
         fetchMovies(api_key, external_id)
-        // let height = movie_grid.scrollHeight;
-        // console.log(height)
-        // document.documentElement.scrollTop = height + 2000;
     })
 
     searchInput.addEventListener('keypress', (event) => {
@@ -41,6 +58,7 @@ function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn
             event.preventDefault();
             movie_grid.innerHTML = ``;
             page_num = 1;
+            id = 0;
             external_id = event.target.value;
             fetchMovies(api_key, external_id)
         }
@@ -50,12 +68,17 @@ function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn
         movie_grid.innerHTML = ``;
         external_id = null;
         page_num = 1;
+        id = 0;
         searchInput.value = '';
         fetchMovies(api_key, external_id);
     })
 
     backToTopBtn.addEventListener('click', () => {
         document.documentElement.scrollTop = 0;
+    })
+
+    document.querySelectorAll('.movie-card').forEach((e) => {
+        console.log(e);
     })
 
 }
@@ -66,6 +89,7 @@ const fetchMovies = async (api_key, external_id) => {
         try{
             const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&language=en-US&query=${external_id}&page=${page_num}&include_adult=false`);
             const data = await res.json();
+            console.log(data.results)
             addMovies(data.results)
         } catch (err){
             console.log(err)
@@ -81,6 +105,7 @@ const fetchMovies = async (api_key, external_id) => {
         }
     }
     
+    addCardEventListener();
 }
 
 window.onload = function () {
