@@ -3,6 +3,7 @@ const imageBaseUrl = 'https://image.tmdb.org/t/p'
 const api_key = "35f2fd51799bb7ebced7f207d3475953"
 const load_more_button = document.getElementById('load-more-movies-btn')
 const search_input = document.getElementById('search-input')
+const exit_button = document.querySelector(".close")
 
 var page_num = 1;
 var external_id = null;
@@ -25,11 +26,12 @@ function addMovies(movies){
     )
 }
 
-function addEventListeners(loadMoreButton, searchInput, movie_grid){
+function addEventListeners(loadMoreButton, searchInput, exitButton, movie_grid){
     loadMoreButton.addEventListener('click', () => {
         page_num += 1
         fetchMovies(api_key, external_id)
     })
+
     searchInput.addEventListener('keypress', (event) => {
         if (event.key === "Enter"){
             event.preventDefault();
@@ -38,6 +40,13 @@ function addEventListeners(loadMoreButton, searchInput, movie_grid){
             external_id = event.target.value;
             fetchMovies(api_key, external_id)
         }
+    })
+
+    exitButton.addEventListener('click', () => {
+        movie_grid.innerHTML = ``;
+        external_id = null;
+        page_num = 1;
+        fetchMovies(api_key, external_id);
     })
 
 }
@@ -67,6 +76,6 @@ const fetchMovies = async (api_key, external_id) => {
 
 window.onload = function () {
     fetchMovies(api_key, external_id);
-    addEventListeners(load_more_button, search_input, movie_grid)
+    addEventListeners(load_more_button, search_input, exit_button, movie_grid)
 }
  
