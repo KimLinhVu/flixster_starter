@@ -8,7 +8,6 @@ const exit_button = document.querySelector(".close")
 const back_top_button = document.getElementById('back-to-top-btn')
 const overlay = document.getElementById('overlay')
 const container = document.querySelector('.container')
-const form = document.querySelector
 
 var page_num = 1;
 var card_id = 0;
@@ -17,33 +16,39 @@ var external_id = null;
 var key;
 
 function addCardEventListener() {
-    let open = document.querySelectorAll('[data-modal-target]')
+    let open = document.querySelectorAll('.movie-card')
     open.forEach(card => {
         card.addEventListener('click', () => {
-            const modal = document.querySelector(card.dataset.modalTarget)
-            
+            // const modal = document.querySelector(card.dataset.modalTarget)
+            /* get movieid from modal attribute */
+            console.log(card.dataset.id)
+            let movieId = card.dataset.id
+            let overview = card.dataset.overview
+
+            fetchVideo(movieId, overview)
+
             overlay.classList.add('show')
-            modal.classList.add('show')
         })
     })
 }
 
 function addMovieHTML(movieGridElement, movie){
-
     /* adjust length of movie title */
     let newTitle = movie.title
-    if (movie.title.length > 19){
-        newTitle = movie.title.slice(0, 19)
+    if (movie.title.length > 17){
+        newTitle = movie.title.slice(0, 17)
         newTitle = newTitle.concat("...")
     }
+    /* add data-movie id to movie-card div */
+    /* return html in another function */
     movieGridElement.innerHTML += `
-    <div class="movie-card" data-modal-target="#modal-card${movie_id++}">
-        <h2 class="movie-title">${newTitle}</h2>
+    <div class="movie-card" data-id="${movie.id}" data-overview="${movie.overview}">
         <img class="movie-poster" src="${imageBaseUrl}/w342${movie.poster_path}" alt="${movie.title}" title="${movie.title}"/>
+        <h2 class="movie-title">${newTitle}</h2>
         <h3 class="movie-votes">Ratings: ${movie.vote_average}</h3>
     </div>
     `
-    fetchVideo(api_key, movie, modal_container)   
+    // fetchVideo(api_key, movie, modal_container)   
 
     
     if (movie_grid.scrollHeight > 1000){
@@ -53,11 +58,9 @@ function addMovieHTML(movieGridElement, movie){
 }
 
 function addMovies(movies){
-
     movies.forEach(movie => {
         addMovieHTML(movie_grid, movie)
-    }
-    )
+    })
 }
 
 function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn, overlay){
@@ -91,27 +94,28 @@ function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn
     })
 
     overlay.addEventListener('click', () => {
-        const modals = document.querySelectorAll('.show')
-        modals.forEach(modal => {
-            modal.classList.remove('show')
-        })
+        const modal = document.querySelector('.modal-card')
+        modal.classList.remove('show')
+        modal_container.classList.add('hidden')
+        overlay.classList.remove('show')
     })
 
 }
 
-const fetchVideo = async (apiKey, movie, modalContainer) => {
+const fetchVideo = async (movieId, overview) => {
     try {
-        const res = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${apiKey}&language=en-US`);
+        const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${api_key}&language=en-US`);
         const data = await res.json();
         key = data.results[0].key
         
-        modalContainer.innerHTML += `
-        <div class="modal-card" id="modal-card${card_id++}">
-            <h2>More About ${movie.title}</h2>
-            <p>${movie.overview}</p>
+        /* put in another function */
+        modal_container.innerHTML = `
+        <div class="modal-card show">
+            <p>${overview}</p>
             <iframe width="560" height="315" src="https://www.youtube.com/embed/${key}"></iframe>
         </div>
         `
+        modal_container.classList.remove('hidden')
     } catch (err) {
         console.log(err)
         modalContainer.innerHTML += `
@@ -124,7 +128,6 @@ const fetchVideo = async (apiKey, movie, modalContainer) => {
 }
 
 const fetchMovies = async (apiKey, external_id) => {
-    
     if (external_id != null){
         try{
             const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${external_id}&page=${page_num}&include_adult=false`);
@@ -136,7 +139,6 @@ const fetchMovies = async (apiKey, external_id) => {
                 movie_grid.innerHTML = `
                 <h1>No Movies Found</h1>
                 `
-                load_more_button.classList.add('hidden')
             }
             addMovies(data.results)
         } catch (err){

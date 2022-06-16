@@ -5,6 +5,7 @@
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
@@ -13,8 +14,16 @@ body {
     padding: 20px;
 }
 
+h1 {
+    position: relative;
+    left: 43%;
+    font-size: 4rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+}
+
 h2 {
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 400;
 }
 
@@ -46,6 +55,13 @@ img:hover {
     opacity: .5;
     cursor: pointer;
     width: 98%;
+}
+
+input {
+    padding: 10px 20px;
+    border-radius: 5%;
+    width: 20%;
+    margin-bottom: 20px;
 }
 
 input:focus {
@@ -115,4 +131,9 @@ input:focus {
 
 .hidden {
     display: none;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
 }
