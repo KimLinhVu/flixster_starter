@@ -7,6 +7,7 @@ const search_input = document.getElementById('search-input')
 const exit_button = document.querySelector(".close")
 const back_top_button = document.getElementById('back-to-top-btn')
 const overlay = document.getElementById('overlay')
+const container = document.querySelector('.container')
 
 var page_num = 1;
 var card_id = 0;
@@ -42,6 +43,12 @@ function addMovieHTML(movieGridElement, movie){
     </div>
     `
     fetchVideo(api_key, movie, modal_container)   
+
+    
+    if (movie_grid.scrollHeight > 1000){
+        back_top_button.classList.remove('hidden')
+        console.log("here")
+    }
 }
 
 function addMovies(movies){
@@ -65,14 +72,17 @@ function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn
             resetVars()
             external_id = event.target.value;
             fetchMovies(api_key, external_id)
+            exit_button.classList.remove('hidden')
         }
     })
 
     exitButton.addEventListener('click', () => {
+        
         resetVars()
         external_id = null;
-        searchInput.value = '';
+        searchInput.value = ``;
         fetchMovies(api_key, external_id);
+        exit_button.classList.add('hidden')
     })
 
     backToTopBtn.addEventListener('click', () => {
@@ -119,6 +129,14 @@ const fetchMovies = async (apiKey, external_id) => {
             const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${external_id}&page=${page_num}&include_adult=false`);
             const data = await res.json();
             console.log(data.results)
+            load_more_button.classList.remove('hidden')
+
+            if (data.results.length == 0){
+                movie_grid.innerHTML = `
+                <h1>No Movies Found</h1>
+                `
+                load_more_button.classList.add('hidden')
+            }
             addMovies(data.results)
         } catch (err){
             console.log(err)
