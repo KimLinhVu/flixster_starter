@@ -9,8 +9,10 @@ const back_top_button = document.getElementById('back-to-top-btn')
 const overlay = document.getElementById('overlay')
 
 var page_num = 1;
-var id = 0;
+var card_id = 0;
+var movie_id = 0;
 var external_id = null;
+var key;
 
 function addCardEventListener() {
     let open = document.querySelectorAll('[data-modal-target]')
@@ -24,26 +26,21 @@ function addCardEventListener() {
     })
 }
 
-function addMovieHTML(movieGridElement, modalContainer, movie){
+function addMovieHTML(movieGridElement, movie){
     movieGridElement.innerHTML += `
-    <div class="movie-card" data-modal-target="#modal-card${id}">
+    <div class="movie-card" data-modal-target="#modal-card${movie_id++}">
         <h2 class="movie-title">${movie.title}</h2>
         <img class="movie-poster" src="${imageBaseUrl}/w342${movie.poster_path}" alt="${movie.original_title}" title="${movie.title}"/>
         <h3 class="movie-votes">Ratings: ${movie.vote_average}</h3>
     </div>
     `
-    modalContainer.innerHTML += `
-    <div class="modal-card" id="modal-card${id++}">
-        <h2>More About ${movie.original_title}</h2>
-        <p>${movie.overview}</p>
-    </div>
-    `
+    fetchVideo(api_key, movie, modal_container)   
 }
 
 function addMovies(movies){
 
     movies.forEach(movie => {
-        addMovieHTML(movie_grid, modal_container, movie)
+        addMovieHTML(movie_grid, movie)
     }
     )
 }
@@ -87,6 +84,25 @@ function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn
         })
     })
 
+}
+
+const fetchVideo = async (apiKey, movie, modalContainer) => {
+    try {
+        const res = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${apiKey}&language=en-US`);
+        const data = await res.json();
+        key = data.results[0].key
+        console.log(key)
+        modalContainer.innerHTML += `
+        <div class="modal-card" id="modal-card${card_id++}">
+            <h2>More About ${movie.title}</h2>
+            <p>${movie.overview}</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/${key}"></iframe>
+        </div>
+        `
+        console.log(id)
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 const fetchMovies = async (apiKey, external_id) => {
