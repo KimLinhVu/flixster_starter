@@ -27,10 +27,17 @@ function addCardEventListener() {
 }
 
 function addMovieHTML(movieGridElement, movie){
+
+    /* adjust length of movie title */
+    let newTitle = movie.title
+    if (movie.title.length > 19){
+        newTitle = movie.title.slice(0, 19)
+        newTitle = newTitle.concat("...")
+    }
     movieGridElement.innerHTML += `
     <div class="movie-card" data-modal-target="#modal-card${movie_id++}">
-        <h2 class="movie-title">${movie.title}</h2>
-        <img class="movie-poster" src="${imageBaseUrl}/w342${movie.poster_path}" alt="${movie.original_title}" title="${movie.title}"/>
+        <h2 class="movie-title">${newTitle}</h2>
+        <img class="movie-poster" src="${imageBaseUrl}/w342${movie.poster_path}" alt="${movie.title}" title="${movie.title}"/>
         <h3 class="movie-votes">Ratings: ${movie.vote_average}</h3>
     </div>
     `
@@ -45,7 +52,7 @@ function addMovies(movies){
     )
 }
 
-function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn, overlay, movieGrid, modalContainer){
+function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn, overlay){
     loadMoreButton.addEventListener('click', () => {
         page_num += 1
         fetchMovies(api_key, external_id)
@@ -54,21 +61,16 @@ function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn
     searchInput.addEventListener('keypress', (event) => {
         if (event.key === "Enter"){
             event.preventDefault();
-            movieGrid.innerHTML = ``;
-            modalContainer.innerHTML = ``;
-            page_num = 1;
-            id = 0;
+            
+            resetVars()
             external_id = event.target.value;
             fetchMovies(api_key, external_id)
         }
     })
 
     exitButton.addEventListener('click', () => {
-        movieGrid.innerHTML = ``;
-        modalContainer.innerHTML = ``;
+        resetVars()
         external_id = null;
-        page_num = 1;
-        id = 0;
         searchInput.value = '';
         fetchMovies(api_key, external_id);
     })
@@ -91,7 +93,7 @@ const fetchVideo = async (apiKey, movie, modalContainer) => {
         const res = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${apiKey}&language=en-US`);
         const data = await res.json();
         key = data.results[0].key
-        console.log(key)
+        
         modalContainer.innerHTML += `
         <div class="modal-card" id="modal-card${card_id++}">
             <h2>More About ${movie.title}</h2>
@@ -99,9 +101,14 @@ const fetchVideo = async (apiKey, movie, modalContainer) => {
             <iframe width="560" height="315" src="https://www.youtube.com/embed/${key}"></iframe>
         </div>
         `
-        console.log(id)
     } catch (err) {
         console.log(err)
+        modalContainer.innerHTML += `
+        <div class="modal-card" id="modal-card${card_id++}">
+            <h2>More About ${movie.title}</h2>
+            <p>${movie.overview}</p>
+        </div>
+        `
     }
 }
 
@@ -130,8 +137,16 @@ const fetchMovies = async (apiKey, external_id) => {
     addCardEventListener();
 }
 
+function resetVars(){
+    movie_grid.innerHTML = ``
+    modal_container.innerHTML = ``
+    page_num = 1
+    movie_id = 0
+    card_id = 0
+}
+
 window.onload = function () {
     fetchMovies(api_key, external_id);
-    addEventListeners(load_more_button, search_input, exit_button, back_top_button, overlay, movie_grid, modal_container)
+    addEventListeners(load_more_button, search_input, exit_button, back_top_button, overlay)
 }
  
