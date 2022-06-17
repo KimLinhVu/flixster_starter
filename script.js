@@ -75,7 +75,7 @@ function getModalHTML(overview, title, key, flag){
     if (flag == 1){
         return `
         <div class="modal-card show">
-            <h2>${title}</h2>
+            <h2 class="modal-title">${title}</h2>
             <p>${overview}</p>
             <iframe width="560" height="315" src="https://www.youtube.com/embed/${key}"></iframe>
             <button id="view-more-btn">View More</button>
@@ -99,7 +99,7 @@ function getViewHTML(releaseDate, genres, runtime, backdropPath){
     })
     genreString = genreString.slice(0, genreString.length - 2)
     return `
-    <div class="modal-card show">
+    <div class="view-more-card show">
         <h2 class="movie-title">Movie BackDrop</h2>
         <img class="backdrop" src="${imageBaseUrl}/w342${backdropPath}" alt="movie backdrop"/>
         <h2>Release Date: ${releaseDate}</h2>

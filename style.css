@@ -78,13 +78,7 @@ input:focus {
 }
 
 @media screen and (max-width: 2400px){
-    /* .movies-grid {
-        grid-template-columns: repeat(5, 1fr);
-    } */
     input {
-        width: 80%;
-    }
-    .modal-card {
         width: 80%;
     }
 }
@@ -93,17 +87,14 @@ input:focus {
     input {
         width: 80%;
     }
-    .modal-card {
-        width: 80%;
+    iframe {
+        width: 500px;
     }
 }
 
 @media screen and (max-width: 960px){
     input {
         width: 80%;
-    }
-    .modal-card {
-        width: 90%;
     }
     iframe {
         width: auto;
@@ -116,12 +107,6 @@ input:focus {
     }
     iframe {
         width: 100%;
-    }
-    .modal-card {
-        width: 90%;
-    }
-    p {
-        font-size: 16px;
     }
 }
 
@@ -143,8 +128,8 @@ input:focus {
     pointer-events: none;
     transition: 200ms ease-in-out;
     position: fixed;
-    background-color: rgb(92, 91, 91);
-    color: white;
+    background-color: rgb(255, 255, 255);
+    color: rgb(35, 35, 35);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -162,6 +147,10 @@ input:focus {
 .modal-card.show {
     opacity: 1;
     pointer-events: all;
+}
+
+.modal-title {
+    font-size: 2rem;
 }
 
 #overlay {
@@ -203,13 +192,65 @@ input:focus {
 }
 
 button {
-    margin: 10px 15px;
+    margin: 15px 15px;
     padding: 10px;
-    font-size: 16px;
+    font-size: 18px;
     border: none;
     cursor: pointer;
+    border-radius: 1%;
+    letter-spacing: 1px;
+    border: 1px solid white;
+    transition: 200ms ease-in-out;
+    
 }
 
 iframe {
     width: 60%;
+    margin-top: 20px;
+}
+
+.view-more-card {
+    opacity: 0;
+    pointer-events: none;
+    transition: 200ms ease-in-out;
+    position: fixed;
+    background-color: white;
+    color: rgb(151, 148, 148);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 10px;
+}
+
+.view-more-card.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#view-more-btn, #go-back-btn {
+    margin-top: 30px;
+    background-color: rgb(36, 36, 36);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5%;
+    transition: 200ms ease-in-out;
+    border: 1px solid rgb(36, 36, 36);
+}
+
+#view-more-btn:hover, #go-back-btn:hover{
+    color: rgb(36, 36, 36);
+    background-color: white;
+}
+
+button:hover{
+    background-color: black;
+    color: white;
 }
