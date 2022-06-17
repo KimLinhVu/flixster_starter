@@ -53,14 +53,14 @@ p {
    overflow: hidden;
 }
 
-img {
+.movie-poster {
     width: 250px;
     height: auto;
     background-color: white;
     transition: 200ms ease-in-out;
 }
 
-img:hover {
+.movie-poster:hover {
     opacity: .5;
     cursor: pointer;
     width: 260px;
@@ -85,6 +85,9 @@ input:focus {
     input {
         width: 80%;
     }
+    .modal-card {
+        width: 80%;
+    }
 }
 
 @media screen and (max-width: 900px){
@@ -93,6 +96,9 @@ input:focus {
     }
     input {
         width: 80%;
+    }
+    .modal-card {
+        width: 90%;
     }
 }
 
@@ -105,6 +111,9 @@ input:focus {
     }
     iframe {
         max-width: 400px;
+    }
+    .modal-card {
+        width: 90%;
     }
 }
 
@@ -134,7 +143,7 @@ input:focus {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    max-width: 80%;
+    width: 60%;
     padding: 10px 20px;
     border-radius: 5px;
     z-index: 10;

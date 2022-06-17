@@ -77,18 +77,26 @@ function getModalHTML(overview, title, key, flag){
         <div class="modal-card show">
             <h2>${title}</h2>
             <p>${overview}</p>
+            <button id="view-more-btn">View More</button>
         </div>
         `
     }
 }
 
 function getViewHTML(releaseDate, genres, runtime, backdropPath){
+    console.log(genres)
+    let genreString = '';
+    genres.forEach(genre => {
+        genreString = genreString.concat(genre.name, ", ")
+    })
+    genreString = genreString.slice(0, genreString.length - 2)
     return `
     <div class="modal-card show">
-        <h3 class="movie-title">Movie BackDrop</h3>
+        <h2 class="movie-title">Movie BackDrop</h2>
         <img class="backdrop" src="${imageBaseUrl}/w342${backdropPath}" alt="movie backdrop"/>
         <h2>Release Date: ${releaseDate}</h2>
         <h2>Runtime: ${runtime} minutes</h2>
+        <h3>Genre: ${genreString}</h3>
         <button id="go-back-btn">Go Back</button>
     </div>  
     `
