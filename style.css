@@ -4,7 +4,6 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
-    scroll-behavior: smooth;
     overflow-x: hidden;
 }
 
@@ -40,8 +39,7 @@ p {
 .movies-grid {
     padding: 1rem;
     display: grid;
-    grid-gap: 20px;
-    /* grid-template-columns: repeat(6, 1fr); */
+    grid-row-gap: 40px;
     grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
 }
 
@@ -100,12 +98,15 @@ input:focus {
     }
 }
 
-@media screen and (max-width: 900px){
+@media screen and (max-width: 960px){
     input {
         width: 80%;
     }
     .modal-card {
         width: 90%;
+    }
+    iframe {
+        width: auto;
     }
 }
 
@@ -114,19 +115,22 @@ input:focus {
         width: 75%;
     }
     iframe {
-        max-width: 400px;
+        width: 100%;
     }
     .modal-card {
         width: 90%;
     }
+    p {
+        font-size: 16px;
+    }
 }
 
-@media screen and (max-width: 500px){
+@media screen and (max-width: 520px){
     input {
         width: 75%;
     }
     iframe {
-        max-width: 300px;
+        width: 100%;
     }
     .movie-card {
         width: 100%;
@@ -204,4 +208,8 @@ button {
     font-size: 16px;
     border: none;
     cursor: pointer;
+}
+
+iframe {
+    width: 60%;
 }
