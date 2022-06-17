@@ -10,9 +10,12 @@ const overlay = document.getElementById('overlay')
 const container = document.querySelector('.container')
 const no_found = document.querySelector('.no-found')
 const view_more_container = document.querySelector('.view-more-container')
+const tv_show_btn = document.querySelector('.tv-show')
+const show_movie_btn = document.querySelector('.show-movie')
 
 var page_num = 1;
 var external_id = null;
+var type = "movie"
 
 /* add click listener to each movie-card added */
 function addCardEventListener() {
@@ -33,9 +36,14 @@ function addCardEventListener() {
 function addMovie(movieGridElement, movies){
     movies.forEach(movie => {
         /* adjusts length of movie title */
-        let newTitle = movie.title
-        if (movie.title.length > 17){
-            newTitle = movie.title.slice(0, 17)
+        let newTitle = ""
+        if (type == "movie"){
+            newTitle = movie.title
+        } else{
+            newTitle = movie.name
+        }
+        if (newTitle.length > 17){
+            newTitle = newTitle.slice(0, 17)
             newTitle = newTitle.concat("...")
         }
         
@@ -51,7 +59,7 @@ function addMovie(movieGridElement, movies){
 /* returns HTML of a movie-card div */
 function getMovieHTML(movie, newTitle){
     return `
-    <div class="movie-card" data-id="${movie.id}" data-overview="${movie.overview}" data-title="${movie.title}">
+    <div class="movie-card" data-id="${movie.id}" data-overview="${movie.overview}" data-title="${newTitle}">
         <img class="movie-poster" src="${imageBaseUrl}/w342${movie.poster_path}" alt="${movie.title}" title="${movie.title}"/>
         <h2 class="movie-title">${newTitle}</h2>
         <h3 class="movie-votes">Ratings: ${movie.vote_average}</h3>
@@ -140,15 +148,31 @@ function addEventListeners(){
         overlay.classList.remove('show')
     })
 
+    tv_show_btn.addEventListener('click', () => {
+        type = "tv"
+        resetVars()
+        fetchMovies(api_key, external_id)
+        tv_show_btn.classList.add('hidden')
+        show_movie_btn.classList.remove('hidden')
+    })
+
+    show_movie_btn.addEventListener('click', () => {
+        type = "movie"
+        resetVars()
+        fetchMovies(api_key, external_id)
+        show_movie_btn.classList.add('hidden')
+        tv_show_btn.classList.remove('hidden')
+    })
+
 }
 
 const fetchVideo = async (movieId, overview, title) => {
     try {
-        const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${api_key}&language=en-US`);
+        const res = await fetch(`https://api.themoviedb.org/3/${type}/${movieId}/videos?api_key=${api_key}&language=en-US`);
         const data = await res.json();
         let key = data.results[0].key
 
-        const res1 = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${api_key}&language=en-US`);
+        const res1 = await fetch(`https://api.themoviedb.org/3/${type}/${movieId}?api_key=${api_key}&language=en-US`);
         const data1 = await res1.json();
         
         modal_container.innerHTML = getModalHTML(overview, title, key, 1)
@@ -170,8 +194,11 @@ const fetchVideo = async (movieId, overview, title) => {
 const fetchMovies = async (apiKey, external_id) => {
     if (external_id != null){
         try{
-            const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${external_id}&page=${page_num}&include_adult=false`);
+            const res = await fetch(`https://api.themoviedb.org/3/search/${type}?api_key=${apiKey}&language=en-US&query=${external_id}&page=${page_num}&include_adult=false`);
             const data = await res.json();
+
+            console.log(type)
+            console.log(data)
 
             load_more_button.classList.remove('hidden')
 
@@ -190,8 +217,10 @@ const fetchMovies = async (apiKey, external_id) => {
     }
     else{
         try {
-            const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${page_num}`);
+            const res = await fetch(`https://api.themoviedb.org/3/${type}/popular?api_key=${apiKey}&language=en-US&page=${page_num}`);
             const data = await res.json();
+            console.log(type)
+            console.log(data)
             addMovie(movie_grid, data.results)
         } catch (err){
             console.error(err)
