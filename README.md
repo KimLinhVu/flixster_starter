@@ -55,7 +55,7 @@ I would have have worked more on the CSS styling to make the modals more respons
 
 * Reflect on your project demo, what went well? Were there things that maybe didn't go as planned? Did you notice something that your peer did that you would like to try next time?
 
-Add your response here
+Making the API calls and fetching the data went relatively well. Something that my peer did that I would like to try next time is auto-refreshing the page as the user searches for a video. I would also want to add a loading feature that displays a loading sign when the user clicks the load more button. 
 
 ### Open-source libraries used
 
