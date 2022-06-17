@@ -37,17 +37,19 @@ function addMovie(movieGridElement, movies){
     movies.forEach(movie => {
         /* adjusts length of movie title */
         let newTitle = ""
+        let prevTitle = ""
         if (type == "movie"){
             newTitle = movie.title
         } else{
             newTitle = movie.name
         }
+        prevTitle = newTitle;
         if (newTitle.length > 17){
             newTitle = newTitle.slice(0, 17)
             newTitle = newTitle.concat("...")
         }
         
-        movieGridElement.innerHTML += getMovieHTML(movie, newTitle)
+        movieGridElement.innerHTML += getMovieHTML(movie, prevTitle, newTitle)
     })  
     /* reveal back to top btn if scrollHeight exceeds length */
     let movieGrid = document.querySelector('.movies-grid')
@@ -57,9 +59,9 @@ function addMovie(movieGridElement, movies){
 }
 
 /* returns HTML of a movie-card div */
-function getMovieHTML(movie, newTitle){
+function getMovieHTML(movie, prevTitle, newTitle){
     return `
-    <div class="movie-card" data-id="${movie.id}" data-overview="${movie.overview}" data-title="${newTitle}">
+    <div class="movie-card" data-id="${movie.id}" data-overview="${movie.overview}" data-title="${prevTitle}">
         <img class="movie-poster" src="${imageBaseUrl}/w342${movie.poster_path}" alt="${movie.title}" title="${movie.title}"/>
         <h2 class="movie-title">${newTitle}</h2>
         <h3 class="movie-votes">Ratings: ${movie.vote_average}</h3>
@@ -85,7 +87,6 @@ function getModalHTML(overview, title, key, flag){
         <div class="modal-card show">
             <h2>${title}</h2>
             <p>${overview}</p>
-            <button id="view-more-btn">View More</button>
         </div>
         `
     }
@@ -205,7 +206,7 @@ const fetchMovies = async (apiKey, external_id) => {
             if (data.results.length == 0){
                 movie_grid.innerHTML = ``
                 no_found.innerHTML = `
-                <h1>No Movie Found</h1>
+                <h2>No Results Found</h2>
                 `
                 hideButtons()
             } else{
