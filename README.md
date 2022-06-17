@@ -40,9 +40,11 @@ Deployed Application (optional): [Flixster Deployed Site](https://kimlinhvu.gith
 
 ### Walkthrough Video
 
-`<iframe width="560" height="315" src="https://www.youtube.com/embed/fONOgGzbKxU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
 
-https://user-images.githubusercontent.com/90161607/174411470-45baad30-a52b-4123-8813-237d01ba1f5a.mov
+
+
+https://user-images.githubusercontent.com/90161607/174411525-261e0d5d-6e7c-4e9d-a4fe-ab8910546ac6.mov
+
 
 
 
