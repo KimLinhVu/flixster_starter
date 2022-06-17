@@ -9,47 +9,49 @@ const back_top_button = document.getElementById('back-to-top-btn')
 const overlay = document.getElementById('overlay')
 const container = document.querySelector('.container')
 const no_found = document.querySelector('.no-found')
+const view_more_container = document.querySelector('.view-more-container')
 
 var page_num = 1;
 var external_id = null;
 
+/* add click listener to each movie-card added */
 function addCardEventListener() {
     let open = document.querySelectorAll('.movie-card')
     open.forEach(card => {
         card.addEventListener('click', () => {
-            
-            /* get movieid from modal attribute */
             let movieId = card.dataset.id
             let overview = card.dataset.overview
+            let title = card.dataset.title
 
-            fetchVideo(movieId, overview)
+            fetchVideo(movieId, overview, title)
             overlay.classList.add('show')
         })
     })
 }
 
+/* add movie cards to grid element */
 function addMovie(movieGridElement, movies){
     movies.forEach(movie => {
-        /* adjust length of movie title */
+        /* adjusts length of movie title */
         let newTitle = movie.title
         if (movie.title.length > 17){
             newTitle = movie.title.slice(0, 17)
             newTitle = newTitle.concat("...")
         }
         
-        /* return html in another function */
         movieGridElement.innerHTML += getMovieHTML(movie, newTitle)
-        
     })  
-
-    if (movie_grid.scrollHeight > 1000){
+    /* reveal back to top btn if scrollHeight exceeds length */
+    let movieGrid = document.querySelector('.movies-grid')
+    if (movieGrid.scrollHeight > 2500){
         back_top_button.classList.remove('hidden')
     }
 }
 
+/* returns HTML of a movie-card div */
 function getMovieHTML(movie, newTitle){
     return `
-    <div class="movie-card" data-id="${movie.id}" data-overview="${movie.overview}">
+    <div class="movie-card" data-id="${movie.id}" data-overview="${movie.overview}" data-title="${movie.title}">
         <img class="movie-poster" src="${imageBaseUrl}/w342${movie.poster_path}" alt="${movie.title}" title="${movie.title}"/>
         <h2 class="movie-title">${newTitle}</h2>
         <h3 class="movie-votes">Ratings: ${movie.vote_average}</h3>
@@ -58,34 +60,49 @@ function getMovieHTML(movie, newTitle){
     `
 }
 
-function getModalHTML(overview, key, flag){
+/* returns HTML of a pop-up/modal div */
+function getModalHTML(overview, title, key, flag){
     if (flag == 1){
         return `
         <div class="modal-card show">
+            <h2>${title}</h2>
             <p>${overview}</p>
             <iframe width="560" height="315" src="https://www.youtube.com/embed/${key}"></iframe>
+            <button id="view-more-btn">View More</button>
         </div>    
         `
     }
     else{
         return `
         <div class="modal-card show">
+            <h2>${title}</h2>
             <p>${overview}</p>
         </div>
         `
     }
 }
 
-function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn, overlay){
-    loadMoreButton.addEventListener('click', () => {
+function getViewHTML(releaseDate, genres, runtime, backdropPath){
+    return `
+    <div class="modal-card show">
+        <h3 class="movie-title">Movie BackDrop</h3>
+        <img class="backdrop" src="${imageBaseUrl}/w342${backdropPath}" alt="movie backdrop"/>
+        <h2>Release Date: ${releaseDate}</h2>
+        <h2>Runtime: ${runtime} minutes</h2>
+        <button id="go-back-btn">Go Back</button>
+    </div>  
+    `
+}
+
+function addEventListeners(){
+    load_more_button.addEventListener('click', () => {
         page_num += 1
         fetchMovies(api_key, external_id)
     })
 
-    searchInput.addEventListener('keypress', (event) => {
+    search_input.addEventListener('keypress', (event) => {
         if (event.key === "Enter"){
             event.preventDefault();
-            
             resetVars()
             external_id = event.target.value;
             fetchMovies(api_key, external_id)
@@ -93,39 +110,51 @@ function addEventListeners(loadMoreButton, searchInput, exitButton, backToTopBtn
         }
     })
 
-    exitButton.addEventListener('click', () => {
-        
+    exit_button.addEventListener('click', () => {
         resetVars()
         external_id = null;
-        searchInput.value = ``;
+        search_input.value = ``;
         fetchMovies(api_key, external_id);
         exit_button.classList.add('hidden')
     })
 
-    backToTopBtn.addEventListener('click', () => {
+    back_top_button.addEventListener('click', () => {
         document.documentElement.scrollTop = 0;
     })
 
     overlay.addEventListener('click', () => {
-        const modal = document.querySelector('.modal-card')
-        modal.classList.remove('show')
+        const modals = document.querySelectorAll('.modal-card')
+        modals.forEach(modal => {
+            modal.classList.remove('show')
+        })
         modal_container.classList.add('hidden')
+        view_more_container.classList.add('hidden')
         overlay.classList.remove('show')
     })
 
 }
 
-const fetchVideo = async (movieId, overview) => {
+const fetchVideo = async (movieId, overview, title) => {
     try {
         const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${api_key}&language=en-US`);
         const data = await res.json();
         let key = data.results[0].key
+
+        const res1 = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${api_key}&language=en-US`);
+        const data1 = await res1.json();
         
-        /* put in another function */
-        modal_container.innerHTML = getModalHTML(overview, key, 1)
-        
+        modal_container.innerHTML = getModalHTML(overview, title, key, 1)
+        view_more_container.innerHTML = getViewHTML(data1.release_date, data1.genres, data1.runtime, data1.backdrop_path)
+        document.getElementById('view-more-btn').addEventListener('click', () => {
+            view_more_container.classList.remove('hidden')
+            modal_container.classList.add('hidden')
+        })
+        document.getElementById('go-back-btn').addEventListener('click', () => {
+            view_more_container.classList.add('hidden')
+            modal_container.classList.remove('hidden')
+        })
     } catch (err) {
-        modal_container.innerHTML = getModalHTML(overview, 0, 0)
+        modal_container.innerHTML = getModalHTML(overview, title, 0, 0)
     }
     modal_container.classList.remove('hidden')
 }
@@ -144,10 +173,10 @@ const fetchMovies = async (apiKey, external_id) => {
                 <h1>No Movie Found</h1>
                 `
                 hideButtons()
-            }else{
+            } else{
                 addMovie(movie_grid, data.results)
             }
-        } catch (err){
+        } catch(err){
 
         }
     }
@@ -172,14 +201,12 @@ function resetVars(){
     movie_grid.innerHTML = ``
     modal_container.innerHTML = ``
     page_num = 1
-    movie_id = 0
-    card_id = 0
     no_found.innerHTML = ``
     load_more_button.classList.remove('hidden')
 }
 
 window.onload = function () {
     fetchMovies(api_key, external_id);
-    addEventListeners(load_more_button, search_input, exit_button, back_top_button, overlay)
+    addEventListeners()
 }
  
