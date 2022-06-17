@@ -48,7 +48,7 @@ Deployed Application (optional): [Flixster Deployed Site](https://kimlinhvu.gith
 
 * Did the topics discussed in your labs prepare you to complete the assignment? Be specific, which features in your weekly assignment did you feel unprepared to complete?
 
-Add your response here
+The topics that I learned in lab adequately prepared me to complete the assignment. I knew how to make API calls to fetch, search, and display the data from the movie database. I also knew how to dynamically update DOM elements using selectors and .innerHTML function.  
 
 * If you had more time, what would you have done differently? Would you have added additional features? Changed the way your project responded to a particular event, etc.
   
@@ -65,3 +65,5 @@ Add your response here
 ### Shout out
 
 Give a shout out to somebody from your cohort that especially helped you during your project. This can be a fellow peer, instructor, TA, mentor, etc.
+
+My mentor helped me better understand how the async/await keywords worked and how to better implement the pop-up feature. 
