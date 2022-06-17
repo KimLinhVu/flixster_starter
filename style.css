@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -27,7 +26,7 @@ h2 {
 
 h3 {
     font-weight: 400;
-    font-size: 15px;
+    font-size: 1.1rem;
     overflow-y: hidden;
 }
 
@@ -215,11 +214,11 @@ iframe {
     transition: 200ms ease-in-out;
     position: fixed;
     background-color: white;
-    color: rgb(151, 148, 148);
+    color: rgb(36, 35, 35);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 60%;
+    width: 40%;
     padding: 10px 20px;
     border-radius: 5px;
     z-index: 10;
@@ -253,4 +252,12 @@ iframe {
 button:hover{
     background-color: black;
     color: white;
+}
+
+.backdrop {
+    width: 400px;
+}
+
+.info {
+    margin-top: 20px;
 }

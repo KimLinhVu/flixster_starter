@@ -29,6 +29,7 @@ function addCardEventListener() {
 
             fetchVideo(movieId, overview, title)
             overlay.classList.add('show')
+            
         })
     })
 }
@@ -102,9 +103,11 @@ function getViewHTML(releaseDate, genres, runtime, backdropPath){
     <div class="view-more-card show">
         <h2 class="movie-title">Movie BackDrop</h2>
         <img class="backdrop" src="${imageBaseUrl}/w342${backdropPath}" alt="movie backdrop"/>
-        <h2>Release Date: ${releaseDate}</h2>
-        <h2>Runtime: ${runtime} minutes</h2>
-        <h3>Genre: ${genreString}</h3>
+        <div class="info">
+            <h3>Release Date: ${releaseDate}</h3>
+            <h3>Runtime: ${runtime} minutes</h3>
+            <h3>Genre: ${genreString}</h3>
+        </div>
         <button id="go-back-btn">Go Back</button>
     </div>  
     `
@@ -154,6 +157,7 @@ function addEventListeners(){
         fetchMovies(api_key, external_id)
         tv_show_btn.classList.add('hidden')
         show_movie_btn.classList.remove('hidden')
+        search_input.placeholder = "Search For TV Shows"
     })
 
     show_movie_btn.addEventListener('click', () => {
@@ -162,6 +166,7 @@ function addEventListeners(){
         fetchMovies(api_key, external_id)
         show_movie_btn.classList.add('hidden')
         tv_show_btn.classList.remove('hidden')
+        search_input.placeholder = "Search For Movies"
     })
 
 }
