@@ -40,12 +40,7 @@ Deployed Application (optional): [Flixster Deployed Site](https://kimlinhvu.gith
 
 ### Walkthrough Video
 
-
-
-
-https://user-images.githubusercontent.com/90161607/174411525-261e0d5d-6e7c-4e9d-a4fe-ab8910546ac6.mov
-
-
+https://user-images.githubusercontent.com/90161607/174411650-fc2d08d4-c862-4254-ada3-bfac9410909d.mp4
 
 
 ### Reflection
