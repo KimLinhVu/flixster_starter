@@ -40,9 +40,7 @@ Deployed Application (optional): [Flixster Deployed Site](https://kimlinhvu.gith
 
 ### Walkthrough Video
 
-`TODO://` Add the embedded URL code to your animated app walkthrough below, `ADD_EMBEDDED_CODE_HERE`. Make sure the video or gif actually renders and animates when viewing this README. (🚫 Remove this paragraph after adding walkthrough video)
-
-`ADD_EMBEDDED_CODE_HERE`
+`<iframe width="560" height="315" src="https://www.youtube.com/embed/fONOgGzbKxU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
 
 ### Reflection
 
@@ -52,7 +50,7 @@ The topics that I learned in lab adequately prepared me to complete the assignme
 
 * If you had more time, what would you have done differently? Would you have added additional features? Changed the way your project responded to a particular event, etc.
   
-Add your response here
+I would have have worked more on the CSS styling to make the modals more responsive to different window sizes and also format the modals better. Additional features I wanted to add was having a drop down menu to display more than one video trailer and to also filter the movies/tv-shows by genre. I also would have added arrow buttons on the pop-ups to go to the next movie and previous movie/tv-show.
 
 * Reflect on your project demo, what went well? Were there things that maybe didn't go as planned? Did you notice something that your peer did that you would like to try next time?
 

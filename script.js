@@ -18,20 +18,97 @@ var page_num = 1;
 var external_id = null;
 var type = "movie"
 
-/* add click listener to each movie-card added */
-function addCardEventListener() {
-    let open = document.querySelectorAll('.movie-card')
-    open.forEach(card => {
-        card.addEventListener('click', () => {
-            let movieId = card.dataset.id
-            let overview = card.dataset.overview
-            let title = card.dataset.title
-            
-            fetchVideo(movieId, overview, title)
-            overlay.classList.add('show')
-            
+/* makes API calls to fetch array of movies and calls addMovie() to add movie cards */
+const fetchMovies = async (apiKey, external_id, movieId) => {
+    /* fetches queried list of movies if external_id is provided */
+    if (external_id != null){
+        try{
+            const res = await fetch(`https://api.themoviedb.org/3/search/${type}?api_key=${apiKey}&language=en-US&query=${external_id}&page=${page_num}&include_adult=false`);
+            const data = await res.json();
+
+            /* unhides load more button */
+            load_more_button.classList.remove('hidden')
+
+            /* if array is empty, display "No Results Found" */
+            if (data.results.length == 0){
+                movie_grid.innerHTML = ``
+                no_found.innerHTML = `
+                <h2>No Results Found</h2>
+                `
+                hideButtons()
+            } else{
+                addMovie(movie_grid, data.results)
+            }
+        } catch(err){
+
+        }
+    }
+    /* fetches recommended list of movies if movieId provided */
+    else if (movieId != null){
+        try{
+            const res = await fetch(`https://api.themoviedb.org/3/${type}/${movieId}/recommendations?api_key=${apiKey}&language=en-US&page=${page_num}`);
+            const data = await res.json();
+            exit_button.classList.remove('hidden')
+            addMovie(movie_grid, data.results)
+        } catch (err){
+
+        }
+    }
+    /* fetches current popular movies */
+    else{
+        try {
+            const res = await fetch(`https://api.themoviedb.org/3/${type}/popular?api_key=${apiKey}&language=en-US&page=${page_num}`);
+            const data = await res.json();
+            addMovie(movie_grid, data.results)
+        } catch (err){
+        
+        }
+    }
+    /* recalls addevent listeners */
+    addCardEventListener();
+}
+
+/* makes API request to fetch first video associated with a movie/tv-show */
+const fetchVideo = async (movieId, overview, title) => {
+    try {
+        /* gets movie key */
+        const res = await fetch(`https://api.themoviedb.org/3/${type}/${movieId}/videos?api_key=${api_key}&language=en-US`);
+        const data = await res.json();
+        let key = data.results[0].key
+
+        /* gets additional information about movie */
+        const res1 = await fetch(`https://api.themoviedb.org/3/${type}/${movieId}?api_key=${api_key}&language=en-US`);
+        const data1 = await res1.json();
+        
+        /* updates pop-up modal and view-more container with info */
+        modal_container.innerHTML = getModalHTML(overview, title, key, 1)
+        view_more_container.innerHTML = getViewHTML(data1.release_date, data1.genres, data1.runtime, data1.backdrop_path)
+
+        /* add click event listeners for view-more, recommended, and go-back button */
+        document.getElementById('view-more-btn').addEventListener('click', () => {
+            view_more_container.classList.remove('hidden')
+            modal_container.classList.add('hidden')
         })
-    })
+        document.getElementById('go-back-btn').addEventListener('click', () => {
+            view_more_container.classList.add('hidden')
+            modal_container.classList.remove('hidden')
+        })
+        document.getElementById('recommend-btn').addEventListener('click', () => {
+            external_id = null
+            view_more_container.classList.add('hidden')
+            overlay.classList.remove('show')
+            resetVars()
+            fetchMovies(api_key, external_id, movieId)
+            load_more_button.classList.add('hidden')
+            tv_show_btn.classList.add('hidden')
+            no_found.innerHTML = `
+                <h2>Recommended For ${title}</h2>
+            `
+        })
+    } catch (err) {
+        modal_container.innerHTML = getModalHTML(overview, title, 0, 0)
+    }
+    modal_container.classList.remove('hidden')
 }
 
 /* add movie cards to grid element */
@@ -46,8 +123,8 @@ function addMovie(movieGridElement, movies){
             newTitle = movie.name
         }
         prevTitle = newTitle;
-        if (newTitle.length > 17){
-            newTitle = newTitle.slice(0, 17)
+        if (newTitle.length > 15){
+            newTitle = newTitle.slice(0, 15)
             newTitle = newTitle.concat("...")
         }
         /* adds movie-card HTML to container element */
@@ -58,6 +135,22 @@ function addMovie(movieGridElement, movies){
     if (movieGrid.scrollHeight > 2500){
         back_top_button.classList.remove('hidden')
     }
+}
+
+/* add click listener to each movie-card added */
+function addCardEventListener() {
+    let open = document.querySelectorAll('.movie-card')
+    open.forEach(card => {
+        card.addEventListener('click', () => {
+            let movieId = card.dataset.id
+            let overview = card.dataset.overview
+            let title = card.dataset.title
+            
+            fetchVideo(movieId, overview, title)
+            overlay.classList.add('show')
+            
+        })
+    })
 }
 
 /* returns HTML of a movie-card div */
@@ -78,7 +171,7 @@ function getModalHTML(overview, title, key, flag){
         <div class="modal-card show">
             <h2 class="modal-title">${title}</h2>
             <p>${overview}</p>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/${key}"></iframe>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/${key}" allow="fullscreen"></iframe>
             <button id="view-more-btn">View More</button>
         </div>    
         `
@@ -177,98 +270,6 @@ function addEventListeners(){
 
 }
 
-/* makes API request to fetch first video associated with a movie/tv-show */
-const fetchVideo = async (movieId, overview, title) => {
-    try {
-        /* gets movie key */
-        const res = await fetch(`https://api.themoviedb.org/3/${type}/${movieId}/videos?api_key=${api_key}&language=en-US`);
-        const data = await res.json();
-        let key = data.results[0].key
-
-        /* gets additional information about movie */
-        const res1 = await fetch(`https://api.themoviedb.org/3/${type}/${movieId}?api_key=${api_key}&language=en-US`);
-        const data1 = await res1.json();
-        
-        /* updates pop-up modal and view-more container with info */
-        modal_container.innerHTML = getModalHTML(overview, title, key, 1)
-        view_more_container.innerHTML = getViewHTML(data1.release_date, data1.genres, data1.runtime, data1.backdrop_path)
-
-        /* add click event listeners for view-more, recommended, and go-back button */
-        document.getElementById('view-more-btn').addEventListener('click', () => {
-            view_more_container.classList.remove('hidden')
-            modal_container.classList.add('hidden')
-        })
-        document.getElementById('go-back-btn').addEventListener('click', () => {
-            view_more_container.classList.add('hidden')
-            modal_container.classList.remove('hidden')
-        })
-        document.getElementById('recommend-btn').addEventListener('click', () => {
-            external_id = null
-            view_more_container.classList.add('hidden')
-            overlay.classList.remove('show')
-            resetVars()
-            fetchMovies(api_key, external_id, movieId)
-            load_more_button.classList.add('hidden')
-            no_found.innerHTML = `
-                <h2>Recommended For ${title}</h2>
-            `
-        })
-    } catch (err) {
-        modal_container.innerHTML = getModalHTML(overview, title, 0, 0)
-    }
-    modal_container.classList.remove('hidden')
-}
-
-/* makes API calls to fetch array of movies and calls addMovie() to add movie cards */
-const fetchMovies = async (apiKey, external_id, movieId) => {
-    /* fetches queried list of movies if external_id is provided */
-    if (external_id != null){
-        try{
-            const res = await fetch(`https://api.themoviedb.org/3/search/${type}?api_key=${apiKey}&language=en-US&query=${external_id}&page=${page_num}&include_adult=false`);
-            const data = await res.json();
-
-            /* unhides load more button */
-            load_more_button.classList.remove('hidden')
-
-            /* if array is empty, display "No Results Found" */
-            if (data.results.length == 0){
-                movie_grid.innerHTML = ``
-                no_found.innerHTML = `
-                <h2>No Results Found</h2>
-                `
-                hideButtons()
-            } else{
-                addMovie(movie_grid, data.results)
-            }
-        } catch(err){
-
-        }
-    }
-    /* fetches recommended list of movies if movieId provided */
-    else if (movieId != null){
-        try{
-            const res = await fetch(`https://api.themoviedb.org/3/${type}/${movieId}/recommendations?api_key=${apiKey}&language=en-US&page=${page_num}`);
-            const data = await res.json();
-            exit_button.classList.remove('hidden')
-            addMovie(movie_grid, data.results)
-        } catch (err){
-
-        }
-    }
-    /* fetches current popular movies */
-    else{
-        try {
-            const res = await fetch(`https://api.themoviedb.org/3/${type}/popular?api_key=${apiKey}&language=en-US&page=${page_num}`);
-            const data = await res.json();
-            addMovie(movie_grid, data.results)
-        } catch (err){
-        
-        }
-    }
-    /* recalls addevent listeners */
-    addCardEventListener();
-}
-
 /* hides loadmore and back-to-top buttons */
 function hideButtons(){
     back_top_button.classList.add('hidden')
@@ -282,6 +283,7 @@ function resetVars(){
     page_num = 1
     no_found.innerHTML = ``
     load_more_button.classList.remove('hidden')
+    tv_show_btn.classList.remove('hidden')
 }
 
 window.onload = function () {

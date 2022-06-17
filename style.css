@@ -245,7 +245,7 @@ iframe {
     border: 1px solid rgb(36, 36, 36);
 }
 
-#view-more-btn:hover, #go-back-btn:hover{
+#view-more-btn:hover, #go-back-btn:hover, #recommend-btn:hover{
     color: rgb(36, 36, 36);
     background-color: white;
 }
