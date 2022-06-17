@@ -12,6 +12,7 @@ const no_found = document.querySelector('.no-found')
 const view_more_container = document.querySelector('.view-more-container')
 const tv_show_btn = document.querySelector('.tv-show')
 const show_movie_btn = document.querySelector('.show-movie')
+const rootElement = document.documentElement
 
 var page_num = 1;
 var external_id = null;
@@ -48,7 +49,7 @@ function addMovie(movieGridElement, movies){
             newTitle = newTitle.slice(0, 17)
             newTitle = newTitle.concat("...")
         }
-        
+        /* adds movie-card HTML to container element */
         movieGridElement.innerHTML += getMovieHTML(movie, prevTitle, newTitle)
     })  
     /* reveal back to top btn if scrollHeight exceeds length */
@@ -66,7 +67,6 @@ function getMovieHTML(movie, prevTitle, newTitle){
         <h2 class="movie-title">${newTitle}</h2>
         <h3 class="movie-votes">Ratings: ${movie.vote_average}</h3>
      </div>
-        
     `
 }
 
@@ -93,7 +93,6 @@ function getModalHTML(overview, title, key, flag){
 }
 
 function getViewHTML(releaseDate, genres, runtime, backdropPath){
-    console.log(genres)
     let genreString = '';
     genres.forEach(genre => {
         genreString = genreString.concat(genre.name, ", ")
@@ -136,7 +135,7 @@ function addEventListeners(){
     })
 
     back_top_button.addEventListener('click', () => {
-        document.documentElement.scrollTop = 0;
+        rootElement.scrollTo(0, 0)
     })
 
     overlay.addEventListener('click', () => {
@@ -198,9 +197,6 @@ const fetchMovies = async (apiKey, external_id) => {
             const res = await fetch(`https://api.themoviedb.org/3/search/${type}?api_key=${apiKey}&language=en-US&query=${external_id}&page=${page_num}&include_adult=false`);
             const data = await res.json();
 
-            console.log(type)
-            console.log(data)
-
             load_more_button.classList.remove('hidden')
 
             if (data.results.length == 0){
@@ -220,8 +216,6 @@ const fetchMovies = async (apiKey, external_id) => {
         try {
             const res = await fetch(`https://api.themoviedb.org/3/${type}/popular?api_key=${apiKey}&language=en-US&page=${page_num}`);
             const data = await res.json();
-            console.log(type)
-            console.log(data)
             addMovie(movie_grid, data.results)
         } catch (err){
             console.error(err)
