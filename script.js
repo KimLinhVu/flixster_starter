@@ -88,11 +88,15 @@ const fetchVideo = async (movieId, overview, title) => {
         document.querySelectorAll('.fa').forEach(btn => {
             btn.addEventListener('click', () => {
                 hidePopUps()
+                modal_container.innerHTML = ``
             })
         })
         document.getElementById('view-more-btn').addEventListener('click', () => {
             view_more_container.classList.remove('hidden')
             modal_container.classList.add('hidden')
+            var iframe = modal_container.querySelector('iframe')
+            iframeSrc = iframe.src;
+		    iframe.src = iframeSrc;
         })
         document.getElementById('go-back-btn').addEventListener('click', () => {
             view_more_container.classList.add('hidden')
@@ -252,7 +256,7 @@ function addEventListeners(){
         modals.forEach(modal => {
             modal.classList.remove('show')
         })
-        modal_container.classList.add('hidden')
+        modal_container.innerHTML = ``
         view_more_container.classList.add('hidden')
         overlay.classList.remove('show')
     })
@@ -290,7 +294,7 @@ function hideButtons(){
 function hidePopUps(){
     view_more_container.classList.add('hidden')
     overlay.classList.remove('show')
-    modal_container.classList.add('hidden')
+    modal_container.innerHTML = ``
     
 }
 
