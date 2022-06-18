@@ -262,3 +262,10 @@ button:hover{
 .info {
     margin-top: 20px;
 }
+
+#close_button{
+    cursor: pointer;
+    margin-left: 90%;
+    font-size: 28px;
+    margin-top: 7px;
+}

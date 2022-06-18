@@ -84,7 +84,12 @@ const fetchVideo = async (movieId, overview, title) => {
         modal_container.innerHTML = getModalHTML(overview, title, key, 1)
         view_more_container.innerHTML = getViewHTML(data1.release_date, data1.genres, data1.runtime, data1.backdrop_path)
 
-        /* add click event listeners for view-more, recommended, and go-back button */
+        /* add click event listeners for view-more, recommended, close button, and go-back button */
+        document.querySelectorAll('.fa').forEach(btn => {
+            btn.addEventListener('click', () => {
+                hidePopUps()
+            })
+        })
         document.getElementById('view-more-btn').addEventListener('click', () => {
             view_more_container.classList.remove('hidden')
             modal_container.classList.add('hidden')
@@ -95,12 +100,10 @@ const fetchVideo = async (movieId, overview, title) => {
         })
         document.getElementById('recommend-btn').addEventListener('click', () => {
             external_id = null
-            view_more_container.classList.add('hidden')
-            overlay.classList.remove('show')
+            hidePopUps()
             resetVars()
             fetchMovies(api_key, external_id, movieId)
-            load_more_button.classList.add('hidden')
-            tv_show_btn.classList.add('hidden')
+            hideButtons()
             no_found.innerHTML = `
                 <h2>Recommended For ${title}</h2>
             `
@@ -169,6 +172,7 @@ function getModalHTML(overview, title, key, flag){
     if (flag == 1){
         return `
         <div class="modal-card show">
+            <i class="fa fa-times-circle" id="close_button"></i>
             <h2 class="modal-title">${title}</h2>
             <p>${overview}</p>
             <iframe width="560" height="315" src="https://www.youtube.com/embed/${key}" allow="fullscreen"></iframe>
@@ -180,6 +184,7 @@ function getModalHTML(overview, title, key, flag){
         /* if no video was fetched, return card w/o embedded video element */
         return `
         <div class="modal-card show">
+            <i class="fa fa-times-circle" id="close_button"></i>
             <h2>${title}</h2>
             <p>${overview}</p>
         </div>
@@ -196,6 +201,7 @@ function getViewHTML(releaseDate, genres, runtime, backdropPath){
     genreString = genreString.slice(0, genreString.length - 2)
     return `
     <div class="view-more-card show">
+        <i class="fa fa-times-circle" id="close_button"></i>
         <h2 class="movie-title">Movie BackDrop</h2>
         <img class="backdrop" src="${imageBaseUrl}/w342${backdropPath}" alt="movie backdrop"/>
         <div class="info">
@@ -274,6 +280,13 @@ function addEventListeners(){
 function hideButtons(){
     back_top_button.classList.add('hidden')
     load_more_button.classList.add('hidden')
+}
+
+function hidePopUps(){
+    view_more_container.classList.add('hidden')
+    overlay.classList.remove('show')
+    modal_container.classList.add('hidden')
+    
 }
 
 /* resets global varialbes and innerHTML of container divs */
