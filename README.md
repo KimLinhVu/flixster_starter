@@ -40,7 +40,8 @@ Deployed Application (optional): [Flixster Deployed Site](https://kimlinhvu.gith
 
 ### Walkthrough Video
 
-`<iframe width="560" height="315" src="https://www.youtube.com/embed/fONOgGzbKxU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+https://user-images.githubusercontent.com/90161607/174411650-fc2d08d4-c862-4254-ada3-bfac9410909d.mp4
+
 
 ### Reflection
 
@@ -54,7 +55,7 @@ I would have have worked more on the CSS styling to make the modals more respons
 
 * Reflect on your project demo, what went well? Were there things that maybe didn't go as planned? Did you notice something that your peer did that you would like to try next time?
 
-Add your response here
+Making the API calls and fetching the data went relatively well. Something that my peer did that I would like to try next time is auto-refreshing the page as the user searches for a video. I would also want to add a loading feature that displays a loading sign when the user clicks the load more button. 
 
 ### Open-source libraries used
 
