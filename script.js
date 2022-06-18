@@ -85,12 +85,6 @@ const fetchVideo = async (movieId, overview, title) => {
         view_more_container.innerHTML = getViewHTML(data1.release_date, data1.genres, data1.runtime, data1.backdrop_path)
 
         /* add click event listeners for view-more, recommended, close button, and go-back button */
-        document.querySelectorAll('.fa').forEach(btn => {
-            btn.addEventListener('click', () => {
-                hidePopUps()
-                modal_container.innerHTML = ``
-            })
-        })
         document.getElementById('view-more-btn').addEventListener('click', () => {
             view_more_container.classList.remove('hidden')
             modal_container.classList.add('hidden')
@@ -117,6 +111,13 @@ const fetchVideo = async (movieId, overview, title) => {
         modal_container.innerHTML = getModalHTML(overview, title, 0, 0)
     }
     modal_container.classList.remove('hidden')
+    document.querySelectorAll('.fa').forEach(btn => {
+        btn.addEventListener('click', () => {
+            hidePopUps()
+            modal_container.innerHTML = ``
+            console.log('here')
+        })
+    })
 }
 
 /* add movie cards to grid element */
