@@ -115,7 +115,6 @@ const fetchVideo = async (movieId, overview, title) => {
         btn.addEventListener('click', () => {
             hidePopUps()
             modal_container.innerHTML = ``
-            console.log('here')
         })
     })
 }
