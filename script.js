@@ -236,6 +236,7 @@ function addEventListeners(){
             external_id = event.target.value;
             fetchMovies(api_key, external_id)
             exit_button.classList.remove('hidden')
+            adjustFilters()
         }
     })
 
@@ -245,6 +246,7 @@ function addEventListeners(){
         search_input.value = ``;
         fetchMovies(api_key, external_id);
         exit_button.classList.add('hidden')
+        adjustFilters()
     })
 
     back_top_button.addEventListener('click', () => {
@@ -296,6 +298,18 @@ function hidePopUps(){
     overlay.classList.remove('show')
     modal_container.innerHTML = ``
     
+}
+
+/* adjust filter buttons */
+function adjustFilters(){
+    if (type == "movie"){
+        show_movie_btn.classList.add('hidden')
+        tv_show_btn.classList.remove('hidden')
+    }
+    else{
+        show_movie_btn.classList.remove('hidden')
+        tv_show_btn.classList.add('hidden')
+    }
 }
 
 /* resets global varialbes and innerHTML of container divs */
