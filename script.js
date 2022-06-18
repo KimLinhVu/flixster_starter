@@ -104,6 +104,7 @@ const fetchVideo = async (movieId, overview, title) => {
             resetVars()
             fetchMovies(api_key, external_id, movieId)
             hideButtons()
+            hideFilters()
             no_found.innerHTML = `
                 <h2>Recommended For ${title}</h2>
             `
@@ -277,6 +278,10 @@ function addEventListeners(){
 }
 
 /* hides loadmore and back-to-top buttons */
+function hideFilters(){
+    tv_show_btn.classList.add('hidden')
+    show_movie_btn.classList.add('hidden')
+}
 function hideButtons(){
     back_top_button.classList.add('hidden')
     load_more_button.classList.add('hidden')
